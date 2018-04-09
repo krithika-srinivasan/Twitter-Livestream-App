@@ -1,7 +1,7 @@
 library(streamR)
 library(ROAuth)
-consumerKey <- 'EeXD2KLpYsQLZ8dxAotiHmwxG'
-consumerSecret <- 'X3QfIGjztfM2SNYLYftrLn5sEMYy5V01PxmrL79NI5CN8L0Tn2'
+consumerKey <- YOUR CONSUMER KEY
+consumerSecret <- YOUR CONSUMER SECRET KEY
 requestURL <- 'https://api.twitter.com/oauth/request_token'
 accessURL <- 'https://api.twitter.com/oauth/access_token'
 authURL <- 'https://api.twitter.com/oauth/authorize'
