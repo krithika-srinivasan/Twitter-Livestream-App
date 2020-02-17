@@ -1,48 +1,29 @@
-library(streamR)
-library(ROAuth)
+library(textstem)
+library(rtweet)
 library(tm)
+library(textdata)
+library(tidyverse)
 library(tidytext)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(wordcloud)
-library(reshape2)
 library(stringr)
 library(igraph)
 library(ggraph)
-# library(qdap)
+# library(qdap) --> can't use it here, but needed later
 library(shiny)
 
 runOnline = T
 
 function(input, output) {
-  
+
   getTweetData <- eventReactive( input$search, {
     isolate({
       withProgress({
         setProgress(message = "Collecting Tweets, Please Wait")
         req(input$searchstr)
         input$search
-        filterStream(file.name = "file1.json", track = input$searchstr, language = 'en', timeout = input$time, oauth = cred)
-        
-        # tst <- read.table('file1.json', header = TRUE)
-        # #Validation - No tweets found
-        # validate(
-        #   need(
-        #     nrow(tst)!= 0, 
-        #     "No tweets found. Increase the time period or search for another topic",
-        #     if (file.exists(fn)) file.remove(fn)
-        #     )
-        # )
-        # if(nrow(tst) == 0) {
-        #   print("No tweets found. Increase the time period or search for another topic")
-        #   fn <- "file1.json"
-        #   if (file.exists(fn)) file.remove(fn)
-        # }
-        
-        
-        df <- parseTweets(tweets = "file1.json")
+        stream_tweets(q = input$searchstr, timeout = input$time, file_name = "file1.json", language = 'en', retweets = FALSE)
+        df <- parse_stream('file1.json')
         df <- df$text
+        df <- unique(df)
       })
     })
    
@@ -72,12 +53,10 @@ function(input, output) {
     
     tidytweet <- tidy(tweetdtm)
     
-    tidytweet[2] <- sapply(tidytweet[2],function(row) iconv(row, "latin1", "ASCII", sub=""))
-    
     tidytweet <- tidytweet %>%
       unnest_tokens(word,term)
     
-    replace_reg <- "https://t.co/[A-Za-z\\d]+|http://[A-Za-z\\d]+|t.co/[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
+    replace_reg <- "https://tco/[A-Za-z\\d]+|http://[A-Za-z\\d]+|tco[A-Za-z\\d]+|&amp;|&lt;|&gt;|RT|https"
     unnest_reg <- "([^A-Za-z_\\d#@']|'(?![A-Za-z_\\d#@]))"
     tidytweet <- tidytweet %>% 
       filter(!str_detect(word, "^RT")) %>%
@@ -85,7 +64,19 @@ function(input, output) {
       unnest_tokens(word, word, token = "regex", pattern = unnest_reg) %>%
       filter(!word %in% stop_words$word, str_detect(word, "[a-z]"))
     
-    badwords <- c(input$searchstr, "season", "abc", "fuck", "shit", "dick", "cunt", "nigger", "fucking", "bitch", "motherfucker", "fucked", "bitches")
+    badwords <- c(input$searchstr)
+    badwords <- tidy(badwords) %>%
+      unnest_tokens(word,x)
+    tidytweet <- tidytweet %>%
+      anti_join(badwords)
+    
+    tidytweet <- tidytweet%>%
+      anti_join(stop_words)
+    
+    tidytweet$word <- tibble(lemmatize_words(tidytweet$word))
+    tidytweet$word <- tidytweet$word$`lemmatize_words(tidytweet$word)`
+    
+    badwords <- c(input$searchstr)
     badwords <- tidy(badwords) %>%
       unnest_tokens(word,x)
     tidytweet <- tidytweet %>%
@@ -148,15 +139,15 @@ function(input, output) {
     tidytweet <-tidytweets()
     tweetsent <- tidytweet %>%
       inner_join(get_sentiments("afinn")) %>%
-      count(word, score, sort = TRUE) %>%
-      group_by(score) %>%
+      count(word, value, sort = TRUE) %>%
+      group_by(value) %>%
       top_n(input$n3) %>%
       ungroup() %>%
       mutate(word = reorder(word, n))
-    ggplot(tweetsent,aes(word, n, fill = score)) +
+    ggplot(tweetsent,aes(word, n, fill = value)) +
       geom_col(show.legend = FALSE) +
-      facet_wrap(~score, scales = "free_y") +
-      labs(y = paste0("Average sentiment: ", mean(tweetsent$score)),
+      facet_wrap(~value, scales = "free_y") +
+      labs(y = paste0("Average sentiment: ", mean(tweetsent$value)),
            x = NULL) +
       coord_flip()
   })
@@ -165,6 +156,8 @@ function(input, output) {
     tidytweet <-tidytweets()
     tweetbi <- tidytweet %>%
       unnest_tokens(bigram, word, token = "ngrams", n = 2)
+    tweetbi <- tweetbi%>%
+      filter(!is.na(bigram))
     tweetbi %>%
       count(bigram, sort = TRUE) %>%
       top_n(input$n4) %>%
@@ -183,7 +176,8 @@ function(input, output) {
     
     tweetgraph <- tweetbisep %>%
       count(word1,word2, sort = TRUE) %>%
-      filter(n > input$n5)
+      filter(n > input$n5)%>%
+      filter(!is.na(word1))
     validate(
       need(nrow(tweetgraph)!=0, "Try a lower frequency")
     )
@@ -205,12 +199,9 @@ function(input, output) {
     library(qdap)
     
     dat <- data.frame(text=tweets, stringsAsFactors = FALSE)
+    dat <- unique(dat)
     twtsearch <- Search(dat, input$tweetsrch)
     twtsearch <- tidy(twtsearch)
-    
-   # output <- wordsearch()
-   # output
   })
-  
 
 }
