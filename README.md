@@ -4,6 +4,14 @@ You can find it at this address: https://moopyminesbleetr.shinyapps.io/appv2/
 
 Switching from streamR to rtweet. Advantages of rtweet are that there's no need to worry about authentication, and it's easier to consider multiple inputs
 # TO DO:
-  1. Add tab for topic modelling
-  2. Add tab for frequency
-  3. Make a real progress bar for streaming tweets
+  1. Add tab for topic modelling (Mostly BTM for short text modelling)
+  2. Add tab for time series for the term
+  3. Correlated word search
+  4. Smaller stuff:
+      a. Make the plots bigger
+      b. Make a real progress bar for tweet collection
+      c. Python script for lemmatization (?)
+
+# Future exploration
+   1. Narrative extraction --> what stories surround this topic? (Possibly the most-retweeted tweets?)
+      
