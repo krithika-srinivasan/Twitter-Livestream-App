@@ -14,4 +14,4 @@ Switching from streamR to rtweet. Advantages of rtweet are that there's no need 
 
 # Future exploration
    1. Narrative extraction --> what stories surround this topic? (Possibly the most-retweeted tweets?)
-      
+   2. More sophisticated sentiment analysis, i.e. move away from the lexicon-based approaches   
