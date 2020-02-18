@@ -1,6 +1,6 @@
 # Twitter-Livestream-App
 This is an R Shiny application that streams tweets in real time and then generates interactive analytics from the collected Tweets.
-You can find it at this address: https://moopyminesbleetr.shinyapps.io/appv2/. To run this code, you will need R Studio and the following libraries installed:
+You can find it at this address: https://moopyminesbleetr.shinyapps.io/appv2/ (THE APP ISN'T WORKING RIGHT NOW. I'M CURRENTLY IN THE PROCESS OF UPDATING THE CODE TO REFLECT CHANGES IN R PACKAGES IN THE LAST FEW YEARS. THE CODE IN THIS REPO WILL WORK PROPERLY, BUT CURRENTLY IS NOT VALIDATED) To run this code, you will need R Studio and the following libraries installed:
 textstem
 
 rtweet
