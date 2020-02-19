@@ -16,11 +16,11 @@ function(input, output) {
 
   getTweetData <- eventReactive( input$search, {
     isolate({
-      withProgress({
-        setProgress(message = "Collecting Tweets, Please Wait")
+      withProgress(message = 'Collecting tweets', {
         req(input$searchstr)
         input$search
         stream_tweets(q = input$searchstr, timeout = input$time, file_name = "file1.json", language = 'en', retweets = FALSE)
+        setProgress(input$time)
         df <- parse_stream('file1.json')
         df <- df$text
         df <- unique(df)
@@ -200,8 +200,12 @@ function(input, output) {
     
     dat <- data.frame(text=tweets, stringsAsFactors = FALSE)
     dat <- unique(dat)
+    
     twtsearch <- Search(dat, input$tweetsrch)
     twtsearch <- tidy(twtsearch)
+    rename(twtsearch, Tweets = x)
+      
   })
+  
 
 }
