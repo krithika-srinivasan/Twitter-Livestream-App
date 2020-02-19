@@ -31,13 +31,16 @@ What's new --> Switched from streamR to rtweet. Advantages of rtweet are that th
   2. Add tab for time series for the term
   3. Correlated word search
   4. Proper validation and error handling
-  4. Smaller stuff:
+    
+    4.1 No tweets found error
+    
+  5. Smaller stuff:
   
-      4.1. Make the plots bigger
+      5.1. Make the plots bigger
       
-      4.2. Make a real progress bar for tweet collection
+      5.2. Make a real progress bar for tweet collection
       
-      4.3. Python script for lemmatization (?)
+      5.3. Python script for lemmatization (?)
 
 # Future exploration
    1. Narrative extraction --> what stories surround this topic? (Possibly the most-retweeted tweets?)
