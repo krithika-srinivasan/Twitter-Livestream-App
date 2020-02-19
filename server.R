@@ -178,12 +178,11 @@ function(input, output) {
       count(word1,word2, sort = TRUE) %>%
       filter(n > input$n5)%>%
       filter(!is.na(word1))
-    validate(
-      need(nrow(tweetgraph)!=0, "Try a lower frequency")
+    shiny::validate(
+      need(nrow(tweetgraph) > 0, "Try a lower frequency")
     )
     tweetgraph <- tweetgraph %>%
       graph_from_data_frame()
-   
     set.seed(2016)
     ggraph(tweetgraph, layout = "fr") +
       geom_edge_link() +
