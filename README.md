@@ -2,27 +2,27 @@
 This is an R Shiny application that streams tweets in real time and then generates interactive analytics from the collected Tweets.
 You can find it at this address: https://moopyminesbleetr.shinyapps.io/appv2/ (FEBRUARY 18 2020: THE APP ISN'T WORKING RIGHT NOW. I'M CURRENTLY IN THE PROCESS OF UPDATING THE CODE TO REFLECT CHANGES IN R PACKAGES IN THE LAST FEW YEARS. THE CODE IN THIS REPO WILL WORK PROPERLY, BUT AT THE MOMENT IS NOT VALIDATED) To run this code, you will need R Studio and the following libraries installed:
 
-textstem
+  1. textstem
 
-rtweet
+  2. rtweet
 
-tm
+  3. tm
 
-textdata
+  4. textdata
 
-tidyverse
+  5. tidyverse
 
-tidytext
+  6. tidytext
 
-stringr
+  7. stringr
 
-igraph
+  8. igraph
 
-ggraph
+  9. ggraph
 
-qdap
+  10. qdap
 
-shiny
+  11. shiny
 
 What's new --> Switched from streamR to rtweet. Advantages of rtweet are that there's no need to worry about authentication, and it's easier to consider multiple inputs. It also shows tweets in its entirety without truncation.
 
