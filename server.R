@@ -22,8 +22,11 @@ function(input, output) {
         stream_tweets(q = input$searchstr, timeout = input$time, file_name = "file1.json", language = 'en', retweets = FALSE)
         setProgress(input$time)
         df <- parse_stream('file1.json')
-        df <- df$text
-        df <- unique(df)
+        df_text <- df$text
+        shiny::validate(
+          need(!is.null(df), 'No tweets found. Wait for 3 minutes and then try streaming for a longer time')
+        )
+        df_text <- unique(df_text)
       })
     })
    
